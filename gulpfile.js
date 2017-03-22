@@ -51,7 +51,7 @@ gulp.task('html', function () {
     return gulp.src(paths.html, {base: paths.dev})
         .pipe(usemin({
             // html: [ htmlmin(options) ], //bugs for multi html, so put it blew
-            css: [cleanCSS()],
+            css: [cleancss()],
             js: [uglify()],
             inlinejs: [uglify()],
             inlinecss: [cleancss(), 'concat']
