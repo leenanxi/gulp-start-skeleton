@@ -64,16 +64,14 @@ gulp.task('html', function () {
     };
     return gulp.src(paths.html, {base: paths.dev})
         .pipe(usemin({
-            // html: [ htmlmin(options) ], //bugs for multi html, so put it blew
+            html: [htmlmin(options)],
             css: [cleancss()],
             js: [uglify()],
             inlinejs: [uglify()],
             inlinecss: [cleancss(), 'concat']
         }))
-        .pipe(htmlmin(options))
         .pipe(gulp.dest(paths.dist))
         .pipe(connect.reload());
-
 });
 
 gulp.task('images', function () {
