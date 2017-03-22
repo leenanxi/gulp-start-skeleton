@@ -8,6 +8,7 @@ var cleancss = require('gulp-clean-css');
 var htmlmin = require('gulp-htmlmin');
 var imagemin = require('gulp-image');
 var usemin = require('gulp-usemin');
+var through = require('through2')
 
 var paths = {
     port: 8000,
@@ -20,14 +21,13 @@ var paths = {
     dist: './dist'
 };
 
-
 gulp.task('clean', function () {
-    return del.sync(['dist/**/*']);//Clean must be sync to avoid from errors
+    return del.sync(paths.dist);//Clean must be sync to avoid from errors
 });
 
 gulp.task('copy', ['clean'], function () {
     return gulp.src(paths.copy, {base: paths.dev})
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('sass', function () {
@@ -38,6 +38,11 @@ gulp.task('sass', function () {
 });
 
 gulp.task('html', function () {
+    //parse single html for some bugs exp: gulp html --src ./src/index.html
+    var src = paths.html;
+    if (process.argv.length === 5) {
+        src = process.argv[4];
+    }
     var options = {
         removeComments: false,
         collapseWhitespace: true,
@@ -48,7 +53,7 @@ gulp.task('html', function () {
         removeStyleLinkTypeAttributes: true,
         removeOptionalTags: false
     };
-    return gulp.src(paths.html, {base: paths.dev})
+    return gulp.src(src, {base: paths.dev})
         .pipe(usemin({
             html: [htmlmin(options)],
             css: [cleancss()],
