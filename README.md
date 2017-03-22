@@ -13,15 +13,14 @@ gulp
 
 ```javascript
 var gulp = require('gulp');
+var del = require('del');
 var connect = require('gulp-connect');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var cleanCSS = require('gulp-clean-css');
 var htmlmin = require('gulp-htmlmin');
-var del = require('del');
 var imagemin = require('gulp-image');
-var autoprefixer = require('gulp-autoprefixer');
 var usemin = require('gulp-usemin');
 
 var paths = {
@@ -96,10 +95,6 @@ gulp.task('html', function () {
 gulp.task('sass', function () {
     return gulp.src(paths.scss, {base: "./"})
         .pipe(sass().on('error', sass.logError))
-        .pipe(autoprefixer({
-            browsers: ['> 0%'],
-            cascade: false
-        }))
         .pipe(gulp.dest('./'))
         .pipe(connect.reload());
 });
@@ -111,4 +106,5 @@ gulp.task('watch', function () {
 });
 
 gulp.task('default', ['clean', 'copy', 'html', 'sass', 'connectDist', 'connectDev', 'watch']);
+
 ```
