@@ -10,6 +10,7 @@ var imagemin = require('gulp-image');
 var autoprefixer = require('gulp-autoprefixer');
 var usemin = require('gulp-usemin');
 
+
 var paths = {
     port: 8000,
     scss: ['./src/assets/styles/*.scss'],
