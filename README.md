@@ -27,12 +27,60 @@ var paths = {
     port: 8000,
     scss: ['./src/assets/styles/*.scss'],
     css: ['./src/assets/styles/*.css'],
-    html: ['src/**/*.html'],
+    html: ['src/*.html','src/views/**/.html'],
     images: './src/assets/images/**/*.*',
     copy: ['./src/assets/fonts/**', './src/assets/json/**'],
     dev: './src',
     dist: './dist'
 };
+
+
+gulp.task('clean', function () {
+    return del.sync(['dist/**/*']);
+});
+
+gulp.task('copy', ['clean'], function () {
+    return gulp.src(paths.copy, {base: paths.dev})
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('sass', function () {
+    return gulp.src(paths.scss, {base: "./"})
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('./'))
+        .pipe(connect.reload());
+});
+
+gulp.task('html', function () {
+    var options = {
+        removeComments: false,
+        collapseWhitespace: true,
+        collapseBooleanAttributes: true,
+        removeAttributeQuotes: true,
+        removeEmptyAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        removeOptionalTags: false
+    };
+    return gulp.src(paths.html, {base: paths.dev})
+        .pipe(usemin({
+            css: [cleanCSS()],
+            js: [uglify()],
+            inlinejs: [uglify()],
+            inlinecss: [cleanCSS(), 'concat']
+        }))
+        .pipe(htmlmin(options))
+        .pipe(gulp.dest(paths.dist))
+        .pipe(connect.reload());
+
+});
+
+gulp.task('images', function () {
+    gulp.src(paths.images, {base: paths.dev})
+        .pipe(imagemin())
+        .pipe(gulp.dest(paths.dist));
+});
+
 
 gulp.task('connectDev', function () {
     connect.server({
@@ -52,59 +100,12 @@ gulp.task('connectDist', function () {
     });
 });
 
-gulp.task('clean', function () {
-    return del.sync(['dist/**/*']);//Clean must be sync to avoid from errors
-});
-
-gulp.task('copy', ['clean'], function () {
-    return gulp.src(paths.copy, {base: paths.dev})
-        .pipe(gulp.dest('./dist'));
-});
-
-gulp.task('images', function () {
-    gulp.src(paths.images)
-        .pipe(imagemin())
-        .pipe(gulp.dest('./dist/assets/images/'));
-});
-
-gulp.task('html', function () {
-    var options = {
-        removeComments: false,
-        collapseWhitespace: true,
-        collapseBooleanAttributes: true,
-        removeAttributeQuotes: true,
-        removeEmptyAttributes: true,
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        removeOptionalTags: false
-    };
-    return gulp.src(paths.html, {base: paths.dev})
-        .pipe(usemin({
-            // html: [ htmlmin(options) ], //bugs for multi html, so put it blew
-            css: [cleanCSS()],
-            js: [uglify()],
-            inlinejs: [uglify()],
-            inlinecss: [cleanCSS(), 'concat']
-        }))
-        .pipe(htmlmin(options))
-        .pipe(gulp.dest('./dist/'))
-        .pipe(connect.reload());
-
-});
-
-gulp.task('sass', function () {
-    return gulp.src(paths.scss, {base: "./"})
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('./'))
-        .pipe(connect.reload());
-});
-
 gulp.task('watch', function () {
     console.log('Gulp watching changes!');
-    gulp.watch(paths.styles, ['sass']);
+    gulp.watch(paths.scss, ['sass']);
     gulp.watch(paths.html.concat(paths.css), ['html']);
 });
 
-gulp.task('default', ['clean', 'copy', 'html', 'sass', 'connectDist', 'connectDev', 'watch']);
+gulp.task('default', ['clean', 'copy', 'sass','html', 'images', 'connectDist', 'connectDev', 'watch']);
 
 ```

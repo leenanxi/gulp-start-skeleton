@@ -4,7 +4,7 @@ var connect = require('gulp-connect');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
-var cleanCSS = require('gulp-clean-css');
+var cleancss = require('gulp-clean-css');
 var htmlmin = require('gulp-htmlmin');
 var imagemin = require('gulp-image');
 var usemin = require('gulp-usemin');
@@ -54,7 +54,7 @@ gulp.task('html', function () {
             css: [cleanCSS()],
             js: [uglify()],
             inlinejs: [uglify()],
-            inlinecss: [cleanCSS(), 'concat']
+            inlinecss: [cleancss(), 'concat']
         }))
         .pipe(htmlmin(options))
         .pipe(gulp.dest(paths.dist))
