@@ -18,7 +18,7 @@ var connect = require('gulp-connect');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
-var cleanCSS = require('gulp-clean-css');
+var cleancss = require('gulp-clean-css');
 var htmlmin = require('gulp-htmlmin');
 var imagemin = require('gulp-image');
 var usemin = require('gulp-usemin');
@@ -36,7 +36,7 @@ var paths = {
 
 
 gulp.task('clean', function () {
-    return del.sync(['dist/**/*']);
+    return del.sync(['dist/**/*']);//Clean must be sync to avoid from errors
 });
 
 gulp.task('copy', ['clean'], function () {
@@ -64,10 +64,11 @@ gulp.task('html', function () {
     };
     return gulp.src(paths.html, {base: paths.dev})
         .pipe(usemin({
-            css: [cleanCSS()],
+            // html: [ htmlmin(options) ], //bugs for multi html, so put it blew
+            css: [cleancss()],
             js: [uglify()],
             inlinejs: [uglify()],
-            inlinecss: [cleanCSS(), 'concat']
+            inlinecss: [cleancss(), 'concat']
         }))
         .pipe(htmlmin(options))
         .pipe(gulp.dest(paths.dist))
