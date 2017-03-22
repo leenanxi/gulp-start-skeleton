@@ -34,14 +34,13 @@ var paths = {
     dist: './dist'
 };
 
-
 gulp.task('clean', function () {
-    return del.sync(['dist/**/*']);//Clean must be sync to avoid from errors
+    return del.sync(paths.dist);//Clean must be sync to avoid from errors
 });
 
 gulp.task('copy', ['clean'], function () {
     return gulp.src(paths.copy, {base: paths.dev})
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('sass', function () {
