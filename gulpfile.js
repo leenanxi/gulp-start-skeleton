@@ -11,13 +11,13 @@ var usemin = require('gulp-usemin');
 var through = require('through2')
 
 var paths = {
-    port: 8000,
+    port: 9000,
     scss: ['./src/assets/styles/*.scss'],
     css: ['./src/assets/styles/*.css'],
     html: ['src/*.html','src/views/**/.html'],
     images: './src/assets/images/**/*.*',
     copy: ['./src/assets/fonts/**', './src/assets/json/**'],
-    dev: './src',
+    dev: './',
     dist: './dist'
 };
 
